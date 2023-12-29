@@ -1,1 +1,1 @@
-from .social_poster import facebook_post, instagram_post, tiktok_post
+from .social_poster import facebook_post, instagram_post, twitter_post

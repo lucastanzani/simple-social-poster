@@ -25,8 +25,8 @@ class TestFacebookE2E(TestCase):
 		self.assertIsNotNone(facebook_post_id.id)
 		self.assertTrue(len(facebook_post_id.id) > 0)
 		post = FacebookPost(**utils.get_post_by_id(post_id=facebook_post_id.id))
-		self.assertTrue(post.message == self.message)
-		self.assertTrue(post.id == facebook_post_id.id)
+		self.assertEqual(post.message, self.message)
+		self.assertEqual(post.id, facebook_post_id.id)
 
 	def test_no_caption_image(self):
 		facebook_post_with_image_id = self.social_poster.facebook_post(

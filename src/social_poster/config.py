@@ -30,14 +30,19 @@ class InstagramSettings(BaseSettings):
 	meta_instagram_page_id: str
 
 
-class TikTokSettings(BaseSettings):
-	pass
+class TwitterSettings(BaseSettings):
+	twitter_access_token: str
+	twitter_access_token_secret: str
+	twitter_api_key: str
+	twitter_api_key_secret: str
+	twitter_min_media_size: int = 5000000
+	twitter_max_media_size: int = 15000000
 
 
 class Settings(BaseSettings):
 	facebook_settings: FacebookSettings = FacebookSettings()
 	instagram_settings: InstagramSettings = InstagramSettings()
-	tiktok_settings: TikTokSettings = TikTokSettings()
+	twitter_settings: TwitterSettings = TwitterSettings()
 
 
 settings = Settings()
