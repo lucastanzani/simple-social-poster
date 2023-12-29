@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase
-
+from utils import get_random_string
 import dotenv
 
 
@@ -9,7 +9,7 @@ class TestTwitterE2E(TestCase):
 		dotenv.load_dotenv(".env.test")
 		import src.social_poster as social_poster
 		self.social_poster = social_poster
-		self.message = "Test"
+		self.message = get_random_string(length=10)
 		self.image_url = "https://avastai.com/content/en/2023-12-28_cover_1_aries_en.png"
 
 	def test_caption_no_image(self):
