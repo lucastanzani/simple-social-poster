@@ -13,11 +13,8 @@ if env_file is not None:
 
 
 class MetaSettings(BaseSettings):
-	meta_app_id: str = None
-	meta_app_secret: str = None
 	meta_system_user_secret: str
-	meta_business_account_id: str
-	meta_api_url: str = "https://graph.facebook.com/v18.0/"
+	meta_api_url: str = "https://graph.facebook.com/v18.0"
 
 
 class FacebookSettings(BaseSettings):
