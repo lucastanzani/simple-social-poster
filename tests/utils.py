@@ -1,3 +1,5 @@
+import string
+import random
 from typing import List, Dict
 
 import requests
@@ -62,3 +64,10 @@ def get_instagram_element_by_id(element_id: str, with_caption: bool) -> Dict[str
 			'access_token': settings.instagram_settings.meta_settings.meta_system_user_secret
 		})
 	return response.json()
+
+
+def get_random_string(length: int):
+	# choose from all lowercase letter
+	letters = string.ascii_lowercase
+	result_str = ''.join(random.choice(letters) for _ in range(length))
+	return result_str
