@@ -52,25 +52,33 @@ Please note that for Meta products a development app has to be created and linke
 
 ### Sample Usage:
 
-Import the poster directly:
+Import the relevant poster directly:
 
 ```python
-import social_poster
+from social_poster import facebook_poster
+from social_poster import instagram_poster
+from social_poster import twitter_poster
 
-social_poster.facebook_post(caption="Test Post", content_url="http://sample.url")
-social_poster.twitter_post(caption="Test Post", content_url="http://sample.url")
-social_poster.instagram_post(caption="Test Post", image_url="http://sample.url")
+facebook_poster.post_text(caption="Test Post")
+facebook_poster.post_image(caption="Test Post", image_url="http://sample.url")
+facebook_poster.post_video(caption="Test Post", video_url="http://sample.url")
+facebook_poster.post_carousel(caption="Test Post", image_urls=["http://sample.url", "http://sample.url"])
+
+instagram_poster.post_image(caption="Test Post", image_url="http://sample.url")
+instagram_poster.post_video(caption="Test Post", video_url="http://sample.url", upload_waiting_time=30)
+instagram_poster.post_carousel(caption="Test Post", image_urls=["http://sample.url", "http://sample.url"])
+
+twitter_poster.post_text(caption="Test Post")
+twitter_poster.post_image(caption="Test Post", image_url="http://sample.url")
 ```
 
 or import and use the required methods:
 
 ```python
-from social_poster import facebook_post, instagram_post, twitter_post
+from social_poster.facebook_poster import post_text
 
-facebook_post(caption="Test Post", image_url="http://sample.url")
-twitter_post(caption="Test Post", image_url="http://sample.url")
-instagram_post(caption="Test Post", image_url="http://sample.url")
-
+post_text(caption="Test Post")
+...
 ```
 
 

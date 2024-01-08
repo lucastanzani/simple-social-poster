@@ -22,7 +22,8 @@ def post_image(
 
 def post_video(
         video_url: str,
-        caption: str = None
+        caption: str = None,
+        upload_waiting_time: int = 30
 ) -> InstagramMediaId:
     if video_url is None:
         raise ValueError("Video URL is required")
@@ -31,7 +32,8 @@ def post_video(
         page_id=instagram_settings.meta_instagram_page_id,
         content_url=video_url,
         caption=caption,
-        is_reel=True
+        is_reel=True,
+        waiting_time=upload_waiting_time
     )
 
 
