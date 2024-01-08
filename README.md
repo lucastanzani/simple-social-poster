@@ -57,8 +57,8 @@ Import the poster directly:
 ```python
 import social_poster
 
-social_poster.facebook_post(caption="Test Post", image_url="http://sample.url")
-social_poster.twitter_post(caption="Test Post", image_url="http://sample.url")
+social_poster.facebook_post(caption="Test Post", content_url="http://sample.url")
+social_poster.twitter_post(caption="Test Post", content_url="http://sample.url")
 social_poster.instagram_post(caption="Test Post", image_url="http://sample.url")
 ```
 
