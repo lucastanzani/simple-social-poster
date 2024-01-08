@@ -65,7 +65,7 @@ def __create_media_container(
     return response.json()['id']
 
 
-def __publish_media_container(page_id: str, creation_id: str, waiting_time: int, is_reel: bool = False) -> str:
+def __publish_media_container(page_id: str, creation_id: str, waiting_time: int = 30, is_reel: bool = False) -> str:
     if is_reel:
         published = False
         counter = 0
