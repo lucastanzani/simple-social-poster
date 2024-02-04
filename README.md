@@ -64,8 +64,10 @@ facebook_poster.post_image(caption="Test Post", image_url="http://sample.url")
 facebook_poster.post_video(caption="Test Post", video_url="http://sample.url")
 facebook_poster.post_carousel(caption="Test Post", image_urls=["http://sample.url", "http://sample.url"])
 
-instagram_poster.post_image(caption="Test Post", image_url="http://sample.url")
-instagram_poster.post_video(caption="Test Post", video_url="http://sample.url", upload_waiting_time=30)
+instagram_poster.post_image(caption="Test Post", image_url="http://sample.url", media_type=MediaType.IMAGE)
+instagram_poster.post_image(caption="Test Post", image_url="http://sample.url", media_type=MediaType.STORY_IMAGE)
+instagram_poster.post_video(caption="Test Post", video_url="http://sample.url", upload_waiting_time=30, media_type=MediaType.REEL)
+instagram_poster.post_video(caption="Test Post", video_url="http://sample.url", upload_waiting_time=30, media_type=MediaType.STORY_VIDEO)
 instagram_poster.post_carousel(caption="Test Post", image_urls=["http://sample.url", "http://sample.url"])
 
 twitter_poster.post_text(caption="Test Post")
