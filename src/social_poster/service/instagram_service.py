@@ -3,8 +3,9 @@ from typing import List
 
 import requests
 
-from ..config.decorators import all_defined, at_most_one_defined_true
+from ..config.decorators import all_defined
 from ..instagram_poster.model import InstagramMediaId
+from ..instagram_poster.model import MediaType
 
 
 def __get_user_token() -> str:
@@ -30,30 +31,34 @@ def __get_upload_status(creation_id: str) -> str:
     return response.json()['status_code']
 
 
-@at_most_one_defined_true("is_carousel", "is_reel", "is_carousel_item")
-@all_defined("is_carousel", "children")
+@all_defined("media_type", "page_id")
 def __create_media_container(
         page_id: str,
         caption: str,
         content_url: str = None,
-        is_carousel_item: bool = False,
-        is_reel: bool = False,
-        is_carousel: bool = False,
+        media_type: MediaType = MediaType.IMAGE,
         children: List[str] = None,
 ) -> str:
     data = {
         "caption": caption,
     }
-    if is_reel:
+    if media_type == MediaType.REEL:
         data['media_type'] = "REELS"
         data["video_url"] = content_url
-    elif is_carousel:
+    elif media_type == MediaType.STORY_VIDEO:
+        data['media_type'] = "STORIES"
+        data["video_url"] = content_url
+    elif media_type == MediaType.CAROUSEL:
         data['media_type'] = "CAROUSEL"
         data['children'] = children
-    else:
+    elif media_type == MediaType.IMAGE:
         data['image_url'] = content_url
-        if is_carousel_item:
-            data['is_carousel_item'] = True
+    elif media_type == MediaType.STORY_IMAGE:
+        data['media_type'] = "STORIES"
+        data["image_url"] = content_url
+    elif media_type == MediaType.CAROUSEL_ITEM:
+        data['image_url'] = content_url
+        data['is_carousel_item'] = True
     response = requests.post(
         url=f"{__get_api_url()}/{page_id}/media",
         params={
@@ -65,8 +70,13 @@ def __create_media_container(
     return response.json()['id']
 
 
-def __publish_media_container(page_id: str, creation_id: str, waiting_time: int = 30, is_reel: bool = False) -> str:
-    if is_reel:
+def __publish_media_container(
+        page_id: str,
+        creation_id: str,
+        waiting_time: int = 30,
+        media_type: MediaType = MediaType.IMAGE
+) -> str:
+    if media_type == MediaType.REEL or media_type == MediaType.STORY_VIDEO:
         published = False
         counter = 0
         while not published and counter < 5:
@@ -89,13 +99,14 @@ def __publish_media_container(page_id: str, creation_id: str, waiting_time: int 
 def post_instagram_single_post(
         page_id: str,
         content_url: str,
-        is_reel: bool = False,
+        media_type: MediaType = MediaType.IMAGE,
         caption: str = None,
         waiting_time: int = 30
 ) -> InstagramMediaId:
-    creation_id = __create_media_container(page_id=page_id, content_url=content_url, caption=caption, is_reel=is_reel)
+    creation_id = __create_media_container(page_id=page_id, content_url=content_url, caption=caption,
+                                           media_type=media_type)
     return InstagramMediaId(
-        id=__publish_media_container(page_id=page_id, creation_id=creation_id, is_reel=is_reel,
+        id=__publish_media_container(page_id=page_id, creation_id=creation_id, media_type=media_type,
                                      waiting_time=waiting_time),
         container_id=creation_id
     )
@@ -107,11 +118,11 @@ def post_instagram_carousel(page_id: str, image_urls: List[str], caption: str) -
             page_id=page_id,
             content_url=image_url,
             caption=caption,
-            is_carousel_item=True
+            media_type=MediaType.CAROUSEL_ITEM
         ) for image_url in image_urls
     ]
-    creation_id = __create_media_container(page_id=page_id, caption=caption, is_carousel=True, children=children)
+    creation_id = __create_media_container(page_id=page_id, caption=caption, media_type=MediaType.CAROUSEL, children=children)
     return InstagramMediaId(
-        id=__publish_media_container(page_id=page_id, creation_id=creation_id),
+        id=__publish_media_container(page_id=page_id, creation_id=creation_id, media_type=MediaType.CAROUSEL),
         container_id=creation_id
     )

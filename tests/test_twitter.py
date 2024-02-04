@@ -1,7 +1,9 @@
 import unittest
 from unittest import TestCase
-from utils import get_random_string
+
 import dotenv
+
+from utils import get_random_string
 
 
 class TestTwitterE2E(TestCase):
@@ -10,7 +12,7 @@ class TestTwitterE2E(TestCase):
         from src.social_poster import twitter_poster
         self.twitter_poster = twitter_poster
         self.message = get_random_string(length=10)
-        self.image_url = "https://avastai.com/content/en/2023-12-28_cover_1_aries_en.png"
+        self.image_url = "http://nickelsilver.altervista.org/data/BEST_PLACE_IN_THE_WORLD.png"
 
     def test_caption_no_image(self):
         twitter_post_id = self.twitter_poster.post_text(

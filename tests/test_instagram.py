@@ -3,6 +3,7 @@ from unittest import TestCase
 
 import dotenv
 
+from src.social_poster.instagram_poster import MediaType
 from tests import utils
 
 
@@ -12,14 +13,15 @@ class TestInstagramE2E(TestCase):
         from src.social_poster import instagram_poster
         self.instagram_poster = instagram_poster
         self.message = utils.get_random_string(10)
-        self.image_url = "https://avastai.com/content/en/2023-12-28_cover_1_aries_en.png"
+        self.image_url = "http://nickelsilver.altervista.org/data/BEST_PLACE_IN_THE_WORLD.png"
         self.video_url = "http://nickelsilver.altervista.org/data/file_example_MOV_1280_1_4MB.mov"
         self.image_urls = [self.image_url, self.image_url]
 
     def test_caption_image(self):
         instagram_media_id = self.instagram_poster.post_image(
             caption=self.message,
-            image_url=self.image_url
+            image_url=self.image_url,
+            media_type=MediaType.IMAGE
         )
         from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
         self.assertIsInstance(instagram_media_id, InstagramMediaId)
@@ -36,7 +38,8 @@ class TestInstagramE2E(TestCase):
     def test_no_caption_image(self):
         instagram_media_id = self.instagram_poster.post_image(
             caption=None,
-            image_url=self.image_url
+            image_url=self.image_url,
+            media_type=MediaType.IMAGE
         )
         from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
         self.assertIsInstance(instagram_media_id, InstagramMediaId)
@@ -78,7 +81,8 @@ class TestInstagramE2E(TestCase):
     def test_caption_reel(self):
         instagram_media_id = self.instagram_poster.post_video(
             caption=self.message,
-            video_url=self.video_url
+            video_url=self.video_url,
+            media_type=MediaType.REEL
         )
         from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
         self.assertIsInstance(instagram_media_id, InstagramMediaId)
@@ -92,7 +96,8 @@ class TestInstagramE2E(TestCase):
     def test_no_caption_reel(self):
         instagram_media_id = self.instagram_poster.post_video(
             caption=None,
-            video_url=self.video_url
+            video_url=self.video_url,
+            media_type=MediaType.REEL
         )
         from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
         self.assertIsInstance(instagram_media_id, InstagramMediaId)
@@ -103,17 +108,55 @@ class TestInstagramE2E(TestCase):
         self.assertEqual(instagram_media_id.id, media.id)
         self.assertIsNone(media.caption)
 
+    def test_no_caption_story_video(self):
+        instagram_media_id = self.instagram_poster.post_video(
+            caption=None,
+            video_url=self.video_url,
+            media_type=MediaType.STORY_VIDEO
+        )
+        from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
+        self.assertIsInstance(instagram_media_id, InstagramMediaId)
+        self.assertIsInstance(instagram_media_id.id, str)
+        self.assertIsNotNone(instagram_media_id.id)
+        self.assertTrue(len(instagram_media_id.id) > 0)
+        media = InstagramMedia(**utils.get_instagram_element_by_id(instagram_media_id.id, with_caption=True))
+        self.assertEqual(instagram_media_id.id, media.id)
+        self.assertIsNone(media.caption)
+
+    def test_no_caption_story_image(self):
+        instagram_media_id = self.instagram_poster.post_image(
+            caption=None,
+            image_url=self.image_url,
+            media_type=MediaType.STORY_IMAGE
+        )
+        from src.social_poster.instagram_poster.model import InstagramMediaId, InstagramMedia
+        self.assertIsInstance(instagram_media_id, InstagramMediaId)
+        self.assertIsInstance(instagram_media_id.id, str)
+        self.assertIsNotNone(instagram_media_id.id)
+        self.assertTrue(len(instagram_media_id.id) > 0)
+        media = InstagramMedia(**utils.get_instagram_element_by_id(instagram_media_id.id, with_caption=True))
+        self.assertEqual(instagram_media_id.id, media.id)
+        self.assertIsNone(media.caption)
+
+    def test_caption_story_image_throws_exception(self):
+        self.assertRaises(ValueError, self.instagram_poster.post_image, caption=self.message, image_url=None,
+                          media_type=MediaType.STORY_IMAGE)
+
     def test_no_caption_no_image_throws_exception(self):
-        self.assertRaises(ValueError, self.instagram_poster.post_image, caption=None, image_url=None)
+        self.assertRaises(ValueError, self.instagram_poster.post_image, caption=None, image_url=None,
+                          media_type=MediaType.IMAGE)
 
     def test_caption_no_image_throws_exception(self):
-        self.assertRaises(ValueError, self.instagram_poster.post_image, caption=self.message, image_url=None)
+        self.assertRaises(ValueError, self.instagram_poster.post_image, caption=self.message, image_url=None,
+                          media_type=MediaType.STORY_IMAGE)
 
     def test_no_caption_no_video_throws_exception(self):
-        self.assertRaises(ValueError, self.instagram_poster.post_video, caption=None, video_url=None)
+        self.assertRaises(ValueError, self.instagram_poster.post_video, caption=None, video_url=None,
+                          media_type=MediaType.REEL)
 
     def test_caption_no_video_throws_exception(self):
-        self.assertRaises(ValueError, self.instagram_poster.post_video, caption=self.message, video_url=None)
+        self.assertRaises(ValueError, self.instagram_poster.post_video, caption=self.message, video_url=None,
+                          media_type=MediaType.REEL)
 
     def test_caption_no_images_carousel_throws_exception(self):
         self.assertRaises(ValueError, self.instagram_poster.post_carousel, caption=self.message, image_urls=[])

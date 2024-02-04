@@ -12,7 +12,7 @@ class TestFacebookE2E(TestCase):
         from src.social_poster import facebook_poster
         self.facebook_poster = facebook_poster
         self.message = utils.get_random_string(10)
-        self.image_url = "https://avastai.com/content/en/2023-12-28_cover_1_aries_en.png"
+        self.image_url = "http://nickelsilver.altervista.org/data/BEST_PLACE_IN_THE_WORLD.png"
         self.video_url = "http://nickelsilver.altervista.org/data/file_example_MOV_1280_1_4MB.mov"
         self.image_urls = [self.image_url, self.image_url]
 

@@ -1,5 +1,4 @@
-import json
-from typing import Dict, List
+from typing import Dict, List, Union
 
 import requests
 
@@ -46,7 +45,7 @@ def get_post_by_id(page_id, post_id: str) -> FacebookPost:
     return response.json()
 
 
-def post_facebook_page(page_id: str, caption: str | None, attached_media: List[str] = None) -> FacebookPostId:
+def post_facebook_page(page_id: str, caption: Union[str, None], attached_media: List[str] = None) -> FacebookPostId:
     data = {"message": caption}
     if attached_media is not None:
         data["attached_media"] = [{"media_fbid": value} for value in attached_media]
@@ -64,7 +63,7 @@ def post_facebook_page(page_id: str, caption: str | None, attached_media: List[s
 def post_facebook_page_image(
         page_id: str,
         image_url: str,
-        caption: str | None,
+        caption: Union[str, None],
         published: bool = True
 ) -> FacebookPostWithImageId:
     response = requests.post(
@@ -81,7 +80,8 @@ def post_facebook_page_image(
     return FacebookPostWithImageId(**response.json())
 
 
-def post_facebook_page_video(page_id: str, video_url: str, caption: str | None, published: bool = True) -> FacebookVideoId:
+def post_facebook_page_video(page_id: str, video_url: str, caption: Union[str, None],
+                             published: bool = True) -> FacebookVideoId:
     response = requests.post(
         url=f"{__get_api_url()}/{page_id}/videos",
         params={
@@ -96,7 +96,7 @@ def post_facebook_page_video(page_id: str, video_url: str, caption: str | None, 
     return FacebookVideoId(**response.json())
 
 
-def post_facebook_carousel(page_id: str, image_urls: List[str], caption: str | None) -> FacebookPostId:
+def post_facebook_carousel(page_id: str, image_urls: List[str], caption: Union[str, None]) -> FacebookPostId:
     children = [
         post_facebook_page_image(
             page_id=page_id,
